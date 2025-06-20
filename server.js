@@ -15,7 +15,8 @@ import errorHandler from './middlewares/errorHandler.js';
 const app = express()
 
 app.use(cors({
-    origin: '*'
+    origin: ['http://localhost:5173', 'https://esperia-experience.vercel.app'],
+    credentials: true
 }))
 
 
