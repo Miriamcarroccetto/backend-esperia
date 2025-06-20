@@ -33,6 +33,11 @@ app.use('/admin/bookings', adminBookingRoutes)
 
 app.use(errorHandler)
 
+app.get("/", (req, res) => {
+  res.send("Backend Esperia è attivo!");
+});
+
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, ()=> {
