@@ -48,6 +48,40 @@ router.get('/', async (req, res, next) => {
     }
 })
 
+// POST (register)
+
+router.post('/register', async (req, res, next) => {
+    const { name, lastname, email, birthday, password } = req.body
+
+    try {
+
+        const existingUser = await User.findOne({ email })
+        if (existingUser) {
+            return res.status(400).json({ message: "Email già registrata" })
+        }
+
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        const newUser = new User({
+            name,
+            lastname,
+            email,
+            birthday,
+            password: hashedPassword,
+            isAdmin: false
+        })
+
+        await newUser.save()
+
+        const token = generateToken({ id: newUser._id, email: newUser.email })
+
+        res.status(201).json({ token })
+    } catch (err) {
+        next(err)
+    }
+})
+
+
 // GET PROFILE ME
 
 router.get('/me', authMiddleware, async (req, res, next) => {
@@ -82,38 +116,6 @@ router.get('/:id', async (req, res, next) => {
 
 
 
-// POST (register)
-
-router.post('/register', async (req, res, next) => {
-    const { name, lastname, email, birthday, password } = req.body
-
-    try {
-
-        const existingUser = await User.findOne({ email })
-        if (existingUser) {
-            return res.status(400).json({ message: "Email già registrata" })
-        }
-
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-        const newUser = new User({
-            name,
-            lastname,
-            email,
-            birthday,
-            password: hashedPassword,
-            isAdmin: false
-        })
-
-        await newUser.save()
-
-        const token = generateToken({ id: newUser._id, email: newUser.email })
-
-        res.status(201).json({ token })
-    } catch (err) {
-        next(err)
-    }
-})
 
 
 // PUT
