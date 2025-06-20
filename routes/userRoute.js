@@ -24,7 +24,7 @@ router.get('/auth/callback', passport.authenticate("google", {session: false, fa
       try {
         const token = req.user.accessToken
         
-       res.redirect(`https://esperia-app-72a1ac2b7be0.herokuapp.com/home?token=${token}`)
+       res.redirect(`https://esperia-experience.vercel.app/home?token=${token}`)
 
        if (!token) {
         return res.status(400).json({ message: "Token non trovato" });
